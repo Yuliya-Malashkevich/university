@@ -66,32 +66,64 @@ class DataBase:
         return data[0]
 
     def average_rating(self, login):
-        sql = f"SELECT mathematics, physics, informatics FROM student WHERE login = '{login}'"
+        sql = f"SELECT mathematics, physics, informatics FROM student WHERE name_surname = '{login}'"
         self.cursors.execute(sql)
         data = self.cursors.fetchall()
         return data[0]
 
-    def get_course(self, name_surname):
-        sql = f"SELECT course FROM student WHERE name_surname='{name_surname}'"
+
+    def get_id(self, id):
+        sql = f"SELECT  name_surname, course FROM student WHERE id='{id}'"
         self.cursors.execute(sql)
         data = self.cursors.fetchall()
         return data[0]
 
-    def change_course(self, name_surname, course):
-        sql = f"UPDATE student SET course = %s WHERE name_surname = '{name_surname}'"
-        temp = ['NULL', 0, course, 0, 0, 0, 0, 0]
-        self.cursors.execute(sql, temp)
+    def change_course(self):
+        sql = "SELECT id, name_surname, course FROM student"
+        self.cursors.execute(sql)
+        data = self.cursors.fetchall()
+        return data
+
+
+    def add_course(self, id, course):
+        sql = f"UPDATE student SET course = '{course}' WHERE id = '{id}'"
+        self.cursors.execute(sql)
         self.connection.commit()
 
 
-    def change_score(self, name_surname, mathematics, physics, informatics): # редактирлвать!!!!!!!!!!!!
-        sql = f"UPDATE student SET mathematics = %s, physics = %s, informatics = %s WHERE name_surname = '{name_surname}'"
-        temp = ['NULL', 0, 0, mathematics, physics, informatics, 0, 0]
-        self.cursors.execute(sql, temp)
-        self.connection.commit()
+    def student_information(self,name_surname):
+        sql = f"SELECT course, physics, informatics, mathematics, average_rating FROM student \
+        WHERE name_surname = '{name_surname}'"
+        self.cursors.execute(sql)
+        data = self.cursors.fetchall()
+        return data
 
-    def student_information(self, name_surname):
-        sql = f"SELECT course, physics, informatics, mathematics, average_rating FROM student WHERE name_surname = '{name_surname}'"
+    def select_marks(self, id):
+        sql = f"SELECT mathematics, physics, informatics FROM student WHERE id ='{id}'"
         self.cursors.execute(sql)
         data = self.cursors.fetchall()
         return data[0]
+
+    def change_marks(self, id, mathematics, physics, informatics ):
+        sql = f"UPDATE student SET `mathematics` = '{mathematics}',`physics` = '{physics}'," \
+              f"`informatics` = '{informatics}' WHERE `id` = '{id}'"
+        self.cursors.execute(sql)
+        self.connection.commit()
+
+    # def get_course(self, id):
+    #     sql = f"SELECT course FROM student WHERE id='{id}'"
+    #     self.cursors.execute(sql)
+    #     data = self.cursors.fetchall()
+    #     return data[0]
+
+    # def change_marks(self, name_surname, mathematics, physics, informatics): # редактирлвать!!!!!!!!!!!!
+    #     sql = f"UPDATE student SET mathematics = %s, physics = %s, informatics = %s WHERE name_surname = '{name_surname}'"
+    #     temp = ['NULL', 0, 0, mathematics, physics, informatics, 0, 0]
+    #     self.cursors.execute(sql, temp)
+    #     self.connection.commit()
+
+    # def change_course(self, name_surname, course):
+    #     sql = f"UPDATE student SET course = %s WHERE name_surname = '{name_surname}'"
+    #     temp = ['NULL', 0, course, 0, 0, 0, 0, 0]
+    #     self.cursors.execute(sql, temp)
+    #     self.connection.commit()
